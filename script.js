@@ -1,6 +1,7 @@
 // -------------------- MKF Pharma - script.js --------------------
 // Local Drug Database Version with full clinical fields
 // Includes: Class, Indications, Mechanism, Usage, Side Effects, Contraindications, Interactions, Pregnancy
+// Also saves search history permanently using localStorage
 
 const DEV_LOCAL_DB = {
   "aspirin": {
@@ -38,8 +39,6 @@ const DEV_LOCAL_DB = {
     interactions: ["Alcohol", "Iodinated contrast media (hold before and after imaging)", "Cimetidine"],
     pregnancy: "Generally safe; used in gestational diabetes under supervision."
   },
-
-  // Add more drugs below using this same format...
 };
 
 // -------------------- Elements --------------------
@@ -49,7 +48,9 @@ const input = document.getElementById("drug-input");
 const resultsDiv = document.getElementById("results");
 const historyList = document.getElementById("history-list");
 
-let searchHistory = [];
+// -------------------- Load saved history --------------------
+let searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
+renderHistory();
 
 // -------------------- Core Search Logic --------------------
 function searchDrug(drugName) {
@@ -93,8 +94,11 @@ function renderDrug(drug) {
 
 // -------------------- Search History --------------------
 function addToHistory(drugName) {
-  if (!searchHistory.includes(drugName)) {
-    searchHistory.push(drugName);
+  const formatted = drugName.trim();
+
+  if (!searchHistory.includes(formatted)) {
+    searchHistory.push(formatted);
+    localStorage.setItem("searchHistory", JSON.stringify(searchHistory)); // Save to localStorage
     renderHistory();
   }
 }
@@ -120,4 +124,3 @@ sampleBtn.addEventListener("click", () => {
 input.addEventListener("keydown", (e) => {
   if (e.key === "Enter") searchDrug(input.value);
 });
-

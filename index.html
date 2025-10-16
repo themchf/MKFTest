@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>MKF-LabAnalyzer — PDF & Image Lab Report Parser</title>
+
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.min.js"></script>
+  <!-- Tesseract.js for OCR fallback -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
+  <!-- Chart not required but may be useful later -->
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>MKF-LabAnalyzer</h1>
+      <p class="muted">Upload a PDF (text or scanned) or image — the app extracts labs and gives immediate structured results.</p>
+    </header>
+
+    <section class="upload">
+      <label class="field">
+        <span>Upload PDF or image</span>
+        <input id="fileInput" type="file" accept=".pdf,image/*" />
+      </label>
+
+      <div class="inline-fields">
+        <label>Sex
+          <select id="sex">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other / Unknown</option>
+          </select>
+        </label>
+        <label>Age
+          <input id="age" type="number" min="0" max="120" value="35" />
+        </label>
+        <label>Assume units?
+          <select id="unitSystem">
+            <option value="auto">Auto (use reported units)</option>
+            <option value="us">US (mg/dL where common)</option>
+            <option value="si">SI (mmol/L where common)</option>
+          </select>
+        </label>
+      </div>
+
+      <button id="analyzeBtn">Analyze report</button>
+    </section>
+
+    <section id="status" class="card">
+      <strong>Status:</strong> <span id="statusText">Waiting for upload</span>
+    </section>
+
+    <section id="results" class="card hidden">
+      <h2>Findings</h2>
+      <div id="resultsList"></div>
+      <hr/>
+      <h3>Detected tests (summary)</h3>
+      <div id="summaryList"></div>
+    </section>
+
+    <footer class="disclaimer">
+      <strong>Disclaimer:</strong> MKF-LabAnalyzer is an educational tool. Do not use it as a substitute for professional medical advice. Always discuss abnormal results with a healthcare professional.
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

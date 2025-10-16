@@ -120,3 +120,4 @@ sampleBtn.addEventListener("click", () => {
 input.addEventListener("keydown", (e) => {
   if (e.key === "Enter") searchDrug(input.value);
 });
+

@@ -1,6 +1,6 @@
 // -------------------- MKF Pharma - script.js --------------------
-// Offline + Local Drug Database (DEV_LOCAL_DB)
-// This version adds support for "Usage" field display
+// Local Drug Database Version with full clinical fields
+// Includes: Class, Indications, Mechanism, Usage, Side Effects, Contraindications, Interactions, Pregnancy
 
 const DEV_LOCAL_DB = {
   "aspirin": {
@@ -8,23 +8,38 @@ const DEV_LOCAL_DB = {
     class: "Salicylate (NSAID)",
     indications: ["Pain", "Fever", "Inflammation", "Low-dose for MI prevention"],
     mechanism: "Irreversible inhibition of COX-1 and COX-2 → decreased prostaglandin and thromboxane synthesis.",
-    usage: "Take 1 tablet (325–650 mg) every 4–6 hours as needed for pain or fever; do not exceed 4 g/day."
+    usage: "Take 1 tablet (325–650 mg) every 4–6 hours as needed for pain or fever; do not exceed 4 g/day.",
+    sideEffects: ["Gastrointestinal bleeding", "Ulceration", "Nausea", "Tinnitus (at high doses)"],
+    contraindications: ["Peptic ulcer disease", "Bleeding disorders", "Children with viral infections (risk of Reye’s syndrome)"],
+    interactions: ["Warfarin", "Corticosteroids", "Alcohol", "Other NSAIDs"],
+    pregnancy: "Avoid in the third trimester due to risk of premature closure of the ductus arteriosus."
   },
+
   "amoxicillin": {
     name: "Amoxicillin",
     class: "Beta-lactam antibiotic (penicillin class)",
     indications: ["Bacterial infections", "Otitis media", "Sinusitis", "Pneumonia"],
     mechanism: "Inhibits bacterial cell wall synthesis by binding to penicillin-binding proteins → cell lysis.",
-    usage: "Take 500 mg every 8 hours or 875 mg every 12 hours; complete full course as prescribed."
+    usage: "Take 500 mg every 8 hours or 875 mg every 12 hours; complete full course as prescribed.",
+    sideEffects: ["Rash", "Diarrhea", "Nausea", "Allergic reactions (anaphylaxis rare)"],
+    contraindications: ["Hypersensitivity to penicillins or beta-lactams"],
+    interactions: ["Methotrexate (increased toxicity)", "Oral contraceptives (reduced effectiveness)"],
+    pregnancy: "Generally considered safe (Category B)."
   },
+
   "metformin": {
     name: "Metformin",
     class: "Biguanide (antidiabetic)",
     indications: ["Type 2 diabetes mellitus", "Polycystic ovary syndrome (off-label)"],
     mechanism: "Decreases hepatic glucose production, decreases intestinal absorption of glucose, and improves insulin sensitivity.",
-    usage: "Start with 500 mg once daily with meals; gradually increase to 1000 mg twice daily as tolerated."
+    usage: "Start with 500 mg once daily with meals; gradually increase to 1000 mg twice daily as tolerated.",
+    sideEffects: ["Nausea", "Diarrhea", "Abdominal discomfort", "Rare: lactic acidosis"],
+    contraindications: ["Severe renal impairment (eGFR < 30 mL/min/1.73 m²)", "Metabolic acidosis", "Severe hepatic disease"],
+    interactions: ["Alcohol", "Iodinated contrast media (hold before and after imaging)", "Cimetidine"],
+    pregnancy: "Generally safe; used in gestational diabetes under supervision."
   },
-  // You can keep adding more drugs below following this same format...
+
+  // Add more drugs below using this same format...
 };
 
 // -------------------- Elements --------------------
@@ -68,7 +83,11 @@ function renderDrug(drug) {
     <p><strong>Class:</strong> ${drug.class || "Information not available"}</p>
     <p><strong>Indications:</strong> ${drug.indications ? drug.indications.join(", ") : "Information not available"}</p>
     <p><strong>Mechanism of Action:</strong> ${drug.mechanism || "Information not available"}</p>
-    <p><strong>Usage:</strong> ${drug.usage ? drug.usage : "Usage information not available."}</p>
+    <p><strong>Usage:</strong> ${drug.usage || "Usage information not available."}</p>
+    <p><strong>Side Effects:</strong> ${drug.sideEffects ? drug.sideEffects.join(", ") : "Information not available"}</p>
+    <p><strong>Contraindications:</strong> ${drug.contraindications ? drug.contraindications.join(", ") : "Information not available"}</p>
+    <p><strong>Interactions:</strong> ${drug.interactions ? drug.interactions.join(", ") : "Information not available"}</p>
+    <p><strong>Pregnancy:</strong> ${drug.pregnancy || "Information not available"}</p>
   `;
 }
 

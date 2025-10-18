@@ -1,43 +1,44 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MKF Pharma</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MKF Diagnostics</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>MKF Pharma</h1>
-      <p class="muted">Type a drug name and get clinical information</p>
-    </header>
+<div class="container">
+<header>
+<h1>MKF Diagnostics</h1>
+<p class="muted">Upload PDF or image — get lab flags and predicted conditions.</p>
+</header>
 
-    <div class="card">
-      <div class="upload">
-        <div class="field" style="flex:1">
-          <label for="drug-input" class="muted">Drug name</label>
-          <input id="drug-input" type="text" placeholder="e.g. aspirin, amoxicillin, metformin" autocomplete="off" />
-        </div>
+<section class="upload">
+<label class="field"><span>Upload PDF or image</span><input id="fileInput" type="file" accept=".pdf,image/*"/></label>
+<div class="inline-fields">
+<label>Sex<select id="sex"><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select></label>
+<label>Age<input id="age" type="number" min="0" max="120" value="35"/></label>
+</div>
+<button id="analyzeBtn">Analyze Report</button>
+</section>
 
-        <div class="inline-fields">
-          <button id="search-btn">Search</button>
-          <button id="sample-btn" type="button">Sample: aspirin</button>
-        </div>
-      </div>
+<section id="status" class="card"><strong>Status:</strong> <span id="statusText">Waiting for upload</span></section>
 
-      <div id="results" class="card hidden" style="margin-top:16px"></div>
+<section id="flagsSection" class="card hidden">
+<h2>Lab Flags</h2>
+<div id="flagsList"></div>
+</section>
 
-      <div class="disclaimer"></div>
-    </div>
+<section id="predictionSection" class="card hidden">
+<h2>Predicted Conditions</h2>
+<div id="predictionList"></div>
+</section>
 
-    <div class="card" style="margin-top:18px">
-      <div class="muted">Search history (click to open)</div>
-      <div id="history-list"></div>
-    </div>
+<footer class="disclaimer"><strong>Disclaimer:</strong> Educational purposes only.</footer>
+</div>
 
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
-

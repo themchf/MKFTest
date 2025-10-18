@@ -1,126 +1,191 @@
-// -------------------- MKF Pharma - script.js --------------------
-// Local Drug Database Version with full clinical fields
-// Includes: Class, Indications, Mechanism, Usage, Side Effects, Contraindications, Interactions, Pregnancy
-// Also saves search history permanently using localStorage
-
-const DEV_LOCAL_DB = {
-  "aspirin": {
-    name: "Aspirin",
-    class: "Salicylate (NSAID)",
-    indications: ["Pain", "Fever", "Inflammation", "Low-dose for MI prevention"],
-    mechanism: "Irreversible inhibition of COX-1 and COX-2 → decreased prostaglandin and thromboxane synthesis.",
-    usage: "Take 1 tablet (325–650 mg) every 4–6 hours as needed for pain or fever; do not exceed 4 g/day.",
-    sideEffects: ["Gastrointestinal bleeding", "Ulceration", "Nausea", "Tinnitus (at high doses)"],
-    contraindications: ["Peptic ulcer disease", "Bleeding disorders", "Children with viral infections (risk of Reye’s syndrome)"],
-    interactions: ["Warfarin", "Corticosteroids", "Alcohol", "Other NSAIDs"],
-    pregnancy: "Avoid in the third trimester due to risk of premature closure of the ductus arteriosus."
-  },
-
-  "amoxicillin": {
-    name: "Amoxicillin",
-    class: "Beta-lactam antibiotic (penicillin class)",
-    indications: ["Bacterial infections", "Otitis media", "Sinusitis", "Pneumonia"],
-    mechanism: "Inhibits bacterial cell wall synthesis by binding to penicillin-binding proteins → cell lysis.",
-    usage: "Take 500 mg every 8 hours or 875 mg every 12 hours; complete full course as prescribed.",
-    sideEffects: ["Rash", "Diarrhea", "Nausea", "Allergic reactions (anaphylaxis rare)"],
-    contraindications: ["Hypersensitivity to penicillins or beta-lactams"],
-    interactions: ["Methotrexate (increased toxicity)", "Oral contraceptives (reduced effectiveness)"],
-    pregnancy: "Generally considered safe (Category B)."
-  },
-
-  "metformin": {
-    name: "Metformin",
-    class: "Biguanide (antidiabetic)",
-    indications: ["Type 2 diabetes mellitus", "Polycystic ovary syndrome (off-label)"],
-    mechanism: "Decreases hepatic glucose production, decreases intestinal absorption of glucose, and improves insulin sensitivity.",
-    usage: "Start with 500 mg once daily with meals; gradually increase to 1000 mg twice daily as tolerated.",
-    sideEffects: ["Nausea", "Diarrhea", "Abdominal discomfort", "Rare: lactic acidosis"],
-    contraindications: ["Severe renal impairment (eGFR < 30 mL/min/1.73 m²)", "Metabolic acidosis", "Severe hepatic disease"],
-    interactions: ["Alcohol", "Iodinated contrast media (hold before and after imaging)", "Cimetidine"],
-    pregnancy: "Generally safe; used in gestational diabetes under supervision."
-  },
+/* -------------------- Lab Database -------------------- */
+const LAB_DB = {
+  "WBC": { name: "WBC", synonyms: ["wbc", "white blood cell", "leukocyte"], unit: "10^3/µL", ranges: { male: [4, 11], female: [4, 11], other: [4, 11] } },
+  "HGB": { name: "Hemoglobin", synonyms: ["hgb", "hemoglobin"], unit: "g/dL", ranges: { male: [13.5, 17.5], female: [12, 15.5], other: [12, 17.5] } },
+  "HCT": { name: "Hematocrit", synonyms: ["hct", "hematocrit"], unit: "%", ranges: { male: [41, 53], female: [36, 46], other: [36, 53] } },
+  "RBC": { name: "RBC", synonyms: ["rbc", "red blood cell", "erythrocyte"], unit: "10^6/µL", ranges: { male: [4.5, 5.9], female: [4.1, 5.1], other: [4.1, 5.9] } },
+  "PLT": { name: "Platelets", synonyms: ["plt", "platelet", "platelets"], unit: "10^3/µL", ranges: { male: [150, 450], female: [150, 450], other: [150, 450] } },
+  "ALT": { name: "Alanine Aminotransferase", synonyms: ["alt", "alanine aminotransferase", "sgpt"], unit: "U/L", ranges: { male: [7, 56], female: [7, 56], other: [7, 56] } },
+  "AST": { name: "Aspartate Aminotransferase", synonyms: ["ast", "aspartate aminotransferase", "sgot"], unit: "U/L", ranges: { male: [10, 40], female: [10, 40], other: [10, 40] } },
+  "ALP": { name: "Alkaline Phosphatase", synonyms: ["alp", "alkaline phosphatase"], unit: "U/L", ranges: { male: [45, 115], female: [30, 100], other: [30, 115] } },
+  "GLU": { name: "Fasting Glucose", synonyms: ["glu", "glucose", "fasting glucose"], unit: "mg/dL", ranges: { male: [70, 99], female: [70, 99], other: [70, 99] } },
+  "CREAT": { name: "Creatinine", synonyms: ["creat", "creatinine", "serum creatinine"], unit: "mg/dL", ranges: { male: [0.7, 1.3], female: [0.6, 1.1], other: [0.6, 1.3] } },
+  "TSH": { name: "Thyroid Stimulating Hormone", synonyms: ["tsh", "thyroid stimulating hormone"], unit: "µIU/mL", ranges: { male: [0.4, 4.0], female: [0.4, 4.0], other: [0.4, 4.0] } },
+  "FT4": { name: "Free T4", synonyms: ["ft4", "free t4", "thyroxine"], unit: "ng/dL", ranges: { male: [0.8, 1.8], female: [0.8, 1.8], other: [0.8, 1.8] } },
+  "FT3": { name: "Free T3", synonyms: ["ft3", "free t3", "triiodothyronine"], unit: "pg/mL", ranges: { male: [2.3, 4.2], female: [2.3, 4.2], other: [2.3, 4.2] } },
+  // Add more tests as needed
 };
 
-// -------------------- Elements --------------------
-const searchBtn = document.getElementById("search-btn");
-const sampleBtn = document.getElementById("sample-btn");
-const input = document.getElementById("drug-input");
-const resultsDiv = document.getElementById("results");
-const historyList = document.getElementById("history-list");
+/* -------------------- Synonym Flattening -------------------- */
+const SYN_TO_KEY = {};
+for (const [key, value] of Object.entries(LAB_DB)) {
+  SYN_TO_KEY[value.name.toLowerCase()] = key;
+  value.synonyms.forEach(s => SYN_TO_KEY[s.toLowerCase()] = key);
+}
 
-// -------------------- Load saved history --------------------
-let searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
-renderHistory();
+/* -------------------- PDF Text Extraction -------------------- */
+async function extractTextFromPDF(file) {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let text = "";
+  for (let p = 1; p <= pdf.numPages; p++) {
+    const page = await pdf.getPage(p);
+    const content = await page.getTextContent();
+    const strings = content.items.map(i => i.str);
+    text += strings.join(" ") + "\n";
+  }
+  return text;
+}
 
-// -------------------- Core Search Logic --------------------
-function searchDrug(drugName) {
-  const key = drugName.toLowerCase().trim();
+/* -------------------- OCR (Image Reading) -------------------- */
+async function ocrFile(file) {
+  const { data } = await Tesseract.recognize(file, 'eng', {
+    tessedit_char_whitelist: '0123456789.-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ%µ/ ',
+  });
+  return data.text;
+}
 
-  if (!key) {
-    alert("Please enter a drug name.");
+/* -------------------- Text Cleanup -------------------- */
+function cleanText(text) {
+  return text
+    .replace(/[,]/g, ".")
+    .replace(/[^0-9a-zA-Zµ%/. \n-]/g, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+/* -------------------- Number Extraction -------------------- */
+function parseNumbersFromText(text) {
+  const rx = /([0-9]+(?:\.[0-9]+)?)/g;
+  const matches = [];
+  let m;
+  while ((m = rx.exec(text)) !== null) {
+    matches.push({ num: Number(m[1]), index: m.index });
+  }
+  return matches;
+}
+
+/* -------------------- Line Handling -------------------- */
+function normalizeLine(s) { return s.trim().toLowerCase(); }
+function getLines(text) {
+  return text.split(/\r?\n|;/).map(l => l.trim()).filter(l => l.length > 0);
+}
+
+/* -------------------- Find Labs in Text -------------------- */
+function findLabsInText(text) {
+  const lines = getLines(text);
+  const found = {};
+  for (const line of lines) {
+    const lower = normalizeLine(line);
+    for (const phrase in SYN_TO_KEY) {
+      if (lower.includes(phrase)) {
+        const key = SYN_TO_KEY[phrase];
+        const nums = parseNumbersFromText(line);
+        if (nums.length > 0) {
+          found[key] = { value: nums[0].num, rawLine: line };
+        }
+      }
+    }
+  }
+  return found;
+}
+
+/* -------------------- Interpret Value (Sex-Specific) -------------------- */
+function interpretValue(key, value, sex = "other") {
+  const meta = LAB_DB[key];
+  if (!meta) return { flag: "Unknown", value, unit: "", name: key };
+  const [low, high] = meta.ranges[sex] || meta.ranges.other;
+  let flag = "Normal";
+  let symbol = "–";
+  if (value < low) { flag = "Low"; symbol = "↓"; }
+  else if (value > high) { flag = "High"; symbol = "↑"; }
+  return { flag, symbol, value, unit: meta.unit, name: meta.name, low, high };
+}
+
+/* -------------------- Prediction Logic -------------------- */
+function predictConditions(labs) {
+  const cond = [];
+  if (labs["WBC"] && labs["WBC"].value > 11) cond.push("Possible infection (High WBC)");
+  if (labs["HGB"] && labs["HGB"].value < 12) cond.push("Anemia (Low Hemoglobin)");
+  if (labs["ALT"] && labs["ALT"].value > 56) cond.push("Liver cell injury (High ALT)");
+  if (labs["AST"] && labs["AST"].value > 40) cond.push("Possible liver or muscle damage (High AST)");
+  if (labs["CREAT"] && labs["CREAT"].value > 1.3) cond.push("Possible renal impairment (High Creatinine)");
+  if (labs["TSH"] && (labs["TSH"].value < 0.4 || labs["TSH"].value > 4.0)) cond.push("Thyroid dysfunction (Abnormal TSH)");
+  return cond.length > 0 ? cond : ["No major abnormalities detected"];
+}
+
+/* -------------------- Main Analyzer -------------------- */
+async function analyzeReport(file, sex, age) {
+  const statusText = document.getElementById("statusText");
+  statusText.innerText = "Reading file...";
+
+  let text = "";
+  try {
+    if (file.name.toLowerCase().endsWith(".pdf")) {
+      text = await extractTextFromPDF(file);
+      if (!text || text.trim().length < 50) text = await ocrFile(file);
+    } else {
+      text = await ocrFile(file);
+    }
+  } catch (err) {
+    throw new Error("Failed to read file: " + err);
+  }
+
+  text = cleanText(text);
+  statusText.innerText = "Parsing labs...";
+
+  const found = findLabsInText(text);
+  const flagsList = document.getElementById("flagsList");
+  const predictionList = document.getElementById("predictionList");
+  flagsList.innerHTML = "";
+  predictionList.innerHTML = "";
+
+  const interpreted = {};
+  for (const k in found) {
+    const iv = interpretValue(k, found[k].value, sex);
+    interpreted[k] = iv;
+
+    const div = document.createElement("div");
+    div.className = "result-row";
+    div.innerHTML = `
+      <div class="result-name">${iv.name}</div>
+      <div class="result-val">${iv.value.toFixed(2)} ${iv.unit}</div>
+      <div class="result-flag ${iv.flag.toLowerCase()}">${iv.symbol} ${iv.flag}</div>
+      <div class="result-range">${iv.low} – ${iv.high}</div>
+    `;
+    flagsList.appendChild(div);
+  }
+
+  document.getElementById("flagsSection").classList.remove("hidden");
+  document.getElementById("predictionSection").classList.remove("hidden");
+
+  const predictions = predictConditions(interpreted);
+  predictions.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "result-row";
+    div.innerText = p;
+    predictionList.appendChild(div);
+  });
+
+  statusText.innerText = "Analysis complete.";
+}
+
+/* -------------------- Event Listener -------------------- */
+document.getElementById("analyzeBtn").addEventListener("click", async () => {
+  const file = document.getElementById("fileInput").files[0];
+  const sex = document.getElementById("sex").value;
+  const age = Number(document.getElementById("age").value);
+  const statusText = document.getElementById("statusText");
+
+  if (!file) {
+    statusText.innerText = "Please select a file!";
     return;
   }
 
-  const drug = DEV_LOCAL_DB[key];
-
-  if (drug) {
-    renderDrug(drug);
-    addToHistory(drugName);
-  } else {
-    resultsDiv.classList.remove("hidden");
-    resultsDiv.innerHTML = `
-      <p style="color:#c0392b"><strong>No results found</strong> for "${drugName}".</p>
-      <p>Try another drug name or check your spelling.</p>
-    `;
+  statusText.innerText = "Processing...";
+  try {
+    await analyzeReport(file, sex, age);
+  } catch (err) {
+    statusText.innerText = "Error: " + err.message;
   }
-}
-
-// -------------------- Render Function --------------------
-function renderDrug(drug) {
-  resultsDiv.classList.remove("hidden");
-
-  resultsDiv.innerHTML = `
-    <h2>${drug.name || "Unknown Drug"}</h2>
-    <p><strong>Class:</strong> ${drug.class || "Information not available"}</p>
-    <p><strong>Indications:</strong> ${drug.indications ? drug.indications.join(", ") : "Information not available"}</p>
-    <p><strong>Mechanism of Action:</strong> ${drug.mechanism || "Information not available"}</p>
-    <p><strong>Usage:</strong> ${drug.usage || "Usage information not available."}</p>
-    <p><strong>Side Effects:</strong> ${drug.sideEffects ? drug.sideEffects.join(", ") : "Information not available"}</p>
-    <p><strong>Contraindications:</strong> ${drug.contraindications ? drug.contraindications.join(", ") : "Information not available"}</p>
-    <p><strong>Interactions:</strong> ${drug.interactions ? drug.interactions.join(", ") : "Information not available"}</p>
-    <p><strong>Pregnancy:</strong> ${drug.pregnancy || "Information not available"}</p>
-  `;
-}
-
-// -------------------- Search History --------------------
-function addToHistory(drugName) {
-  const formatted = drugName.trim();
-
-  if (!searchHistory.includes(formatted)) {
-    searchHistory.push(formatted);
-    localStorage.setItem("searchHistory", JSON.stringify(searchHistory)); // Save to localStorage
-    renderHistory();
-  }
-}
-
-function renderHistory() {
-  historyList.innerHTML = "";
-  searchHistory.forEach((drug) => {
-    const div = document.createElement("div");
-    div.textContent = drug;
-    div.classList.add("history-item");
-    div.style.cursor = "pointer";
-    div.onclick = () => searchDrug(drug);
-    historyList.appendChild(div);
-  });
-}
-
-// -------------------- Event Listeners --------------------
-searchBtn.addEventListener("click", () => searchDrug(input.value));
-sampleBtn.addEventListener("click", () => {
-  input.value = "aspirin";
-  searchDrug("aspirin");
-});
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") searchDrug(input.value);
 });

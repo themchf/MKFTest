@@ -1,196 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MKF Prescriptions</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f8f9fb;
-      margin: 0;
-      padding: 0;
-    }
+// List of symptoms and their recommended medicines
+const symptomData = {
+  "fever": "Paracetamol 500mg every 6 hours if needed.",
+  "cough": "Dextromethorphan syrup 10ml every 8 hours.",
+  "sore throat": "Lozenges or warm salt-water gargle twice daily.",
+  "headache": "Ibuprofen 400mg every 8 hours after food.",
+  "runny nose": "Cetirizine 10mg once daily.",
+  "nausea": "Domperidone 10mg before meals.",
+  "vomiting": "Ondansetron 4mg every 8 hours if required.",
+  "diarrhea": "Oral rehydration salts + Loperamide if severe.",
+  "constipation": "Lactulose syrup 15ml at night.",
+  "abdominal pain": "Buscopan 10mg every 8 hours.",
+  "fatigue": "Multivitamin once daily.",
+  "dizziness": "Meclizine 25mg once daily.",
+  "allergy": "Loratadine 10mg once daily.",
+  "insomnia": "Melatonin 3mg before sleep.",
+  "anxiety": "Low-dose propranolol or consult a doctor.",
+  "heartburn": "Omeprazole 20mg before breakfast.",
+  "shortness of breath": "Seek immediate medical care!",
+  "chest pain": "⚠️ Emergency — go to hospital immediately!"
+};
 
-    .container {
-      max-width: 850px;
-      margin: 40px auto;
-      background: #ffffff;
-      padding: 25px 30px;
-      border-radius: 16px;
-      box-shadow: 0 3px 20px rgba(0, 0, 0, 0.08);
-    }
+// Get DOM elements
+const symptomButtonsContainer = document.getElementById("symptom-buttons");
+const outputDiv = document.getElementById("output");
 
-    header {
-      text-align: center;
-      margin-bottom: 25px;
-    }
+// Create symptom buttons
+Object.keys(symptomData).forEach(symptom => {
+  const btn = document.createElement("button");
+  btn.classList.add("symptom-btn");
+  btn.textContent = symptom;
 
-    h1 {
-      margin: 0;
-      color: #007bff;
-    }
+  // On click: show medicine suggestion immediately
+  btn.addEventListener("click", () => {
+    const recommendation = symptomData[symptom];
+    outputDiv.innerHTML = `
+      <div class="result">
+        <h3>Symptom: ${symptom}</h3>
+        <p><strong>Recommended Medicine:</strong> ${recommendation}</p>
+      </div>
+    `;
 
-    .muted {
-      color: #666;
-      font-size: 15px;
-    }
+    // Button click animation
+    document.querySelectorAll(".symptom-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+  });
 
-    #symptom-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-      margin: 30px 0;
-    }
-
-    .symptom-btn {
-      background: #e0e0e0;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 25px;
-      cursor: pointer;
-      transition: 0.25s ease;
-      font-size: 15px;
-    }
-
-    .symptom-btn:hover {
-      background: #d0d0d0;
-    }
-
-    .symptom-btn.active {
-      background: #28a745;
-      color: white;
-      box-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
-    }
-
-    .result {
-      background: #f9f9f9;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
-      margin-top: 20px;
-    }
-
-    .warning {
-      color: red;
-      font-weight: bold;
-    }
-
-    .disclaimer {
-      text-align: center;
-      color: #888;
-      font-size: 13px;
-      margin-top: 25px;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>MKF Prescriptions</h1>
-      <p class="muted">Tap your symptoms to get a diagnosis</p>
-    </header>
-
-    <!-- Dynamic Symptom Buttons -->
-    <div id="symptom-buttons"></div>
-
-    <!-- Diagnosis Output -->
-    <div id="output"></div>
-
-    <p class="disclaimer">⚠️ This tool is for educational guidance only. Always consult a doctor for serious symptoms.</p>
-  </div>
-
-  <script>
-    const conditions = [
-      {
-        keywords: ["fever", "cough", "yellow sputum"],
-        diagnosis: "Bacterial Respiratory Infection",
-        medicine: "Amoxicillin",
-        dosage: "500 mg",
-        frequency: "Three times daily",
-        duration: "7 days",
-        warning: "Avoid if allergic to penicillin."
-      },
-      {
-        keywords: ["fever", "sore throat", "white patches"],
-        diagnosis: "Streptococcal Pharyngitis",
-        medicine: "Amoxicillin",
-        dosage: "500 mg",
-        frequency: "Every 12 hours",
-        duration: "10 days",
-        warning: "Confirm no penicillin allergy."
-      },
-      {
-        keywords: ["headache", "sensitivity to light", "stiff neck"],
-        diagnosis: "Possible Meningitis",
-        medicine: "Seek immediate hospital care",
-        dosage: "-",
-        frequency: "-",
-        duration: "-",
-        warning: "Emergency condition. Do not self-treat."
-      },
-      {
-        keywords: ["fever", "body aches", "runny nose"],
-        diagnosis: "Seasonal Influenza",
-        medicine: "Oseltamivir",
-        dosage: "75 mg",
-        frequency: "Twice daily",
-        duration: "5 days",
-        warning: "Start within 48 hours of symptom onset."
-      },
-      {
-        keywords: ["frequent urination", "excessive thirst", "weight loss"],
-        diagnosis: "Possible Diabetes Mellitus (Type 2)",
-        medicine: "Metformin",
-        dosage: "500 mg",
-        frequency: "Twice daily",
-        duration: "Ongoing (long-term)",
-        warning: "Monitor blood glucose regularly. Contraindicated in severe kidney disease."
-      }
-    ];
-
-    // Generate unique symptoms as buttons
-    const allSymptoms = [...new Set(conditions.flatMap(c => c.keywords))];
-    const container = document.getElementById("symptom-buttons");
-
-    allSymptoms.forEach(symptom => {
-      const btn = document.createElement("button");
-      btn.textContent = symptom;
-      btn.className = "symptom-btn";
-      btn.onclick = () => {
-        btn.classList.toggle("active");
-        analyze();
-      };
-      container.appendChild(btn);
-    });
-
-    function analyze() {
-      const selected = Array.from(document.querySelectorAll(".symptom-btn.active"))
-        .map(btn => btn.textContent.toLowerCase());
-
-      let result = "<p>No exact match found. Try adding more symptoms or consult a doctor.</p>";
-
-      for (let cond of conditions) {
-        const matchAll = cond.keywords.every(k => selected.includes(k.toLowerCase()));
-        if (matchAll) {
-          result = `
-            <div class="result">
-              <h3>Diagnosis: ${cond.diagnosis}</h3>
-              <p><strong>Medicine:</strong> ${cond.medicine}</p>
-              <p><strong>Dosage:</strong> ${cond.dosage}</p>
-              <p><strong>Frequency:</strong> ${cond.frequency}</p>
-              <p><strong>Duration:</strong> ${cond.duration}</p>
-              <p class="warning">⚠️ ${cond.warning}</p>
-            </div>
-          `;
-          break;
-        }
-      }
-
-      document.getElementById("output").innerHTML = result;
-    }
-  </script>
-</body>
-</html>
+  symptomButtonsContainer.appendChild(btn);
+});

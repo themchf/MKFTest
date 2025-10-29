@@ -1,4 +1,4 @@
-// List of symptoms and their recommended medicines
+// Symptom data: symptom → recommended medicine
 const symptomData = {
   "fever": "Paracetamol 500mg every 6 hours if needed.",
   "cough": "Dextromethorphan syrup 10ml every 8 hours.",
@@ -20,29 +20,28 @@ const symptomData = {
   "chest pain": "⚠️ Emergency — go to hospital immediately!"
 };
 
-// Get DOM elements
+// Reference DOM elements
 const symptomButtonsContainer = document.getElementById("symptom-buttons");
 const outputDiv = document.getElementById("output");
 
-// Create symptom buttons
+// Create buttons dynamically
 Object.keys(symptomData).forEach(symptom => {
   const btn = document.createElement("button");
   btn.classList.add("symptom-btn");
   btn.textContent = symptom;
 
-  // On click: show medicine suggestion immediately
+  // When clicked, instantly show the recommendation
   btn.addEventListener("click", () => {
+    document.querySelectorAll(".symptom-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
     const recommendation = symptomData[symptom];
     outputDiv.innerHTML = `
-      <div class="result">
-        <h3>Symptom: ${symptom}</h3>
+      <div class="result-card">
+        <h2>Symptom: ${symptom}</h2>
         <p><strong>Recommended Medicine:</strong> ${recommendation}</p>
       </div>
     `;
-
-    // Button click animation
-    document.querySelectorAll(".symptom-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
   });
 
   symptomButtonsContainer.appendChild(btn);

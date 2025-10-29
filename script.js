@@ -1,5 +1,35 @@
 // --- Existing conditions array (keep as is) ---
-const conditions = [ /* your long condition list stays unchanged */ ];
+const conditions = [
+  // --- Conditions database ---
+const conditions = [
+  {
+    keywords: ["fever", "cough", "yellow sputum"],
+    diagnosis: "Bacterial Respiratory Infection",
+    medicine: "Amoxicillin",
+    dosage: "500 mg",
+    frequency: "Three times daily",
+    duration: "7 days",
+    warning: "Avoid if allergic to penicillin."
+  },
+  {
+    keywords: ["fever", "sore throat", "white patches"],
+    diagnosis: "Streptococcal Pharyngitis",
+    medicine: "Amoxicillin",
+    dosage: "500 mg",
+    frequency: "Every 12 hours",
+    duration: "10 days",
+    warning: "Confirm no penicillin allergy."
+  },
+  {
+    keywords: ["runny nose", "sneezing", "sore throat", "cold"],
+    diagnosis: "Common Cold",
+    medicine: "Paracetamol 500 mg",
+    dosage: "1–2 tablets",
+    frequency: "Every 6 hours as needed",
+    duration: "Up to 5 days",
+    warning: "Seek medical care if symptoms persist."
+  }
+  /* your long condition list stays unchanged */ ];
 
 // --- New symptom selection setup ---
 const allSymptoms = [
@@ -53,4 +83,5 @@ function analyze() {
 
   document.getElementById("output").innerHTML = result;
 }
+
 

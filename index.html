@@ -68,7 +68,7 @@
 
     .result-card {
       background: var(--card);
-      padding: 16px;
+      padding: 18px;
       border-radius: 12px;
       box-shadow: 0 0 18px rgba(0,255,209,0.25);
       margin-top: 15px;
@@ -78,13 +78,28 @@
 
     .result-card h2 {
       color: var(--cyan);
-      margin: 0 0 8px 0;
-      font-size: 1.05rem;
+      margin: 0 0 10px 0;
+      font-size: 1.1rem;
+      text-align: center;
     }
 
-    .result-card p {
+    .result-section {
+      margin-top: 10px;
+    }
+
+    .result-section h3 {
+      color: var(--accent);
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .result-section ul {
       margin: 0;
-      font-size: 0.95rem;
+      padding-left: 20px;
+    }
+
+    .result-section li {
+      margin-bottom: 5px;
       color: var(--text);
     }
 
@@ -98,7 +113,7 @@
   <div class="container">
     <header>
       <h1>MKF Prescriptions</h1>
-      <p class="muted">Select your symptoms to get personalized medication suggestions</p>
+      <p class="muted">Select your symptoms to get a full prescription recommendation</p>
     </header>
 
     <div id="symptom-buttons"></div>

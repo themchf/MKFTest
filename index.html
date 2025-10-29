@@ -1,44 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MKF Diagnostics</title>
-<link rel="stylesheet" href="style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MKF Prescriptions</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Add minimal fallback styling if style.css doesn’t include it */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .muted {
+      color: #666;
+      font-size: 14px;
+    }
+    #symptom-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 25px 0;
+    }
+    .symptom-btn {
+      background: #e0e0e0;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 15px;
+    }
+    .symptom-btn.active {
+      background: #28a745;
+      color: white;
+    }
+    button#analyze-btn {
+      display: block;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 5px;
+      margin: 0 auto 20px auto;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    #output {
+      margin-top: 20px;
+    }
+    .result {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 1px 10px rgba(0,0,0,0.1);
+    }
+    .warning {
+      color: red;
+      font-weight: bold;
+    }
+    .disclaimer {
+      text-align: center;
+      color: #888;
+      font-size: 13px;
+      margin-top: 25px;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-<header>
-<h1>MKF Diagnostics</h1>
-<p class="muted">Upload PDF or image — get lab flags and predicted conditions.</p>
-</header>
+  <div class="container">
+    <header>
+      <h1>MKF Prescriptions</h1>
+      <p class="muted">Select your symptoms and get the recommended medicine</p>
+    </header>
 
-<section class="upload">
-<label class="field"><span>Upload PDF or image</span><input id="fileInput" type="file" accept=".pdf,image/*"/></label>
-<div class="inline-fields">
-<label>Sex<select id="sex"><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select></label>
-<label>Age<input id="age" type="number" min="0" max="120" value="35"/></label>
-</div>
-<button id="analyzeBtn">Analyze Report</button>
-</section>
+    <!-- Buttons for Symptoms -->
+    <div id="symptom-buttons"></div>
 
-<section id="status" class="card"><strong>Status:</strong> <span id="statusText">Waiting for upload</span></section>
+    <!-- Analyze Button -->
+    <button id="analyze-btn" onclick="analyze()">Analyze</button>
 
-<section id="flagsSection" class="card hidden">
-<h2>Lab Flags</h2>
-<div id="flagsList"></div>
-</section>
+    <!-- Results -->
+    <div id="output"></div>
 
-<section id="predictionSection" class="card hidden">
-<h2>Predicted Conditions</h2>
-<div id="predictionList"></div>
-</section>
+    <p class="disclaimer">⚠️ This tool is for guidance only. Consult a doctor for any serious conditions.</p>
+  </div>
 
-<footer class="disclaimer"><strong>Disclaimer:</strong> Educational purposes only.</footer>
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

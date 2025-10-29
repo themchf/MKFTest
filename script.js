@@ -1,72 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Symptom Analyzer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MKF Prescriptions</title>
+  <link rel="stylesheet" href="style.css">
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #f4f6fa;
+      background-color: #f8f9fb;
+      margin: 0;
+      padding: 0;
     }
-    h2 {
+
+    .container {
+      max-width: 850px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 25px 30px;
+      border-radius: 16px;
+      box-shadow: 0 3px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    header {
       text-align: center;
+      margin-bottom: 25px;
     }
+
+    h1 {
+      margin: 0;
+      color: #007bff;
+    }
+
+    .muted {
+      color: #666;
+      font-size: 15px;
+    }
+
     #symptom-buttons {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
       justify-content: center;
-      margin-bottom: 20px;
+      margin: 30px 0;
     }
+
     .symptom-btn {
       background: #e0e0e0;
       border: none;
-      padding: 10px 15px;
-      border-radius: 20px;
+      padding: 10px 18px;
+      border-radius: 25px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: 0.25s ease;
       font-size: 15px;
     }
+
+    .symptom-btn:hover {
+      background: #d0d0d0;
+    }
+
     .symptom-btn.active {
-      background: #4caf50;
+      background: #28a745;
       color: white;
+      box-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
     }
-    #analyze-btn {
-      display: block;
-      margin: 0 auto 20px auto;
-      background: #2196f3;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
+
     .result {
-      background: white;
+      background: #f9f9f9;
+      padding: 20px;
       border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      max-width: 500px;
-      margin: 0 auto;
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
     }
+
     .warning {
       color: red;
       font-weight: bold;
     }
+
+    .disclaimer {
+      text-align: center;
+      color: #888;
+      font-size: 13px;
+      margin-top: 25px;
+    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <header>
+      <h1>MKF Prescriptions</h1>
+      <p class="muted">Tap your symptoms to get a diagnosis</p>
+    </header>
 
-  <h2>Symptom Analyzer</h2>
+    <!-- Dynamic Symptom Buttons -->
+    <div id="symptom-buttons"></div>
 
-  <div id="symptom-buttons"></div>
+    <!-- Diagnosis Output -->
+    <div id="output"></div>
 
-  <button id="analyze-btn" onclick="analyze()">Analyze</button>
-
-  <div id="output"></div>
+    <p class="disclaimer">⚠️ This tool is for educational guidance only. Always consult a doctor for serious symptoms.</p>
+  </div>
 
   <script>
     const conditions = [
@@ -115,31 +149,32 @@
         duration: "Ongoing (long-term)",
         warning: "Monitor blood glucose regularly. Contraindicated in severe kidney disease."
       }
-      // You can continue adding the rest of your conditions here...
     ];
 
-    // Collect unique symptoms from all conditions
+    // Generate unique symptoms as buttons
     const allSymptoms = [...new Set(conditions.flatMap(c => c.keywords))];
+    const container = document.getElementById("symptom-buttons");
 
-    // Display buttons for each symptom
-    const symptomContainer = document.getElementById("symptom-buttons");
     allSymptoms.forEach(symptom => {
       const btn = document.createElement("button");
       btn.textContent = symptom;
       btn.className = "symptom-btn";
-      btn.onclick = () => btn.classList.toggle("active");
-      symptomContainer.appendChild(btn);
+      btn.onclick = () => {
+        btn.classList.toggle("active");
+        analyze();
+      };
+      container.appendChild(btn);
     });
 
     function analyze() {
-      const selectedSymptoms = Array.from(document.querySelectorAll(".symptom-btn.active"))
-                                   .map(btn => btn.textContent.toLowerCase());
+      const selected = Array.from(document.querySelectorAll(".symptom-btn.active"))
+        .map(btn => btn.textContent.toLowerCase());
 
-      let result = "<p>No exact match found. Please consult a doctor.</p>";
+      let result = "<p>No exact match found. Try adding more symptoms or consult a doctor.</p>";
 
       for (let cond of conditions) {
-        const matches = cond.keywords.every(k => selectedSymptoms.includes(k.toLowerCase()));
-        if (matches) {
+        const matchAll = cond.keywords.every(k => selected.includes(k.toLowerCase()));
+        if (matchAll) {
           result = `
             <div class="result">
               <h3>Diagnosis: ${cond.diagnosis}</h3>
@@ -157,6 +192,5 @@
       document.getElementById("output").innerHTML = result;
     }
   </script>
-
 </body>
 </html>

@@ -1,4 +1,3 @@
-// Symptom data: symptom → recommended medicine
 const symptomData = {
   "fever": "Paracetamol 500mg every 6 hours if needed.",
   "cough": "Dextromethorphan syrup 10ml every 8 hours.",
@@ -20,9 +19,10 @@ const symptomData = {
   "chest pain": "⚠️ Emergency — go to hospital immediately!"
 };
 
-// Reference DOM elements
 const symptomButtonsContainer = document.getElementById("symptom-buttons");
 const outputDiv = document.getElementById("output");
+const analyzeBtn = document.getElementById("analyze-btn");
+let selectedSymptoms = [];
 
 // Create buttons dynamically
 Object.keys(symptomData).forEach(symptom => {
@@ -30,19 +30,33 @@ Object.keys(symptomData).forEach(symptom => {
   btn.classList.add("symptom-btn");
   btn.textContent = symptom;
 
-  // When clicked, instantly show the recommendation
   btn.addEventListener("click", () => {
-    document.querySelectorAll(".symptom-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
+    btn.classList.toggle("active");
 
-    const recommendation = symptomData[symptom];
-    outputDiv.innerHTML = `
-      <div class="result-card">
-        <h2>Symptom: ${symptom}</h2>
-        <p><strong>Recommended Medicine:</strong> ${recommendation}</p>
-      </div>
-    `;
+    if (btn.classList.contains("active")) {
+      selectedSymptoms.push(symptom);
+    } else {
+      selectedSymptoms = selectedSymptoms.filter(s => s !== symptom);
+    }
+
+    analyzeBtn.style.display = selectedSymptoms.length > 0 ? "block" : "none";
   });
 
   symptomButtonsContainer.appendChild(btn);
 });
+
+// Analyze selected symptoms
+function analyze() {
+  outputDiv.innerHTML = "";
+
+  selectedSymptoms.forEach(symptom => {
+    const recommendation = symptomData[symptom];
+    const card = document.createElement("div");
+    card.classList.add("result-card");
+    card.innerHTML = `
+      <h2>${symptom}</h2>
+      <p><strong>Recommended Medicine:</strong> ${recommendation}</p>
+    `;
+    outputDiv.appendChild(card);
+  });
+}

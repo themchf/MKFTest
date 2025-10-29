@@ -1,75 +1,85 @@
-const symptomData = {
-  "fever": "Paracetamol 500mg every 6 hours if needed.",
-  "cough": "Dextromethorphan syrup 10ml every 8 hours.",
-  "sore throat": "Lozenges or warm salt-water gargle twice daily.",
-  "headache": "Ibuprofen 400mg every 8 hours after food.",
-  "runny nose": "Cetirizine 10mg once daily.",
-  "nausea": "Domperidone 10mg before meals.",
-  "vomiting": "Ondansetron 4mg every 8 hours if required.",
-  "diarrhea": "Oral rehydration salts + Loperamide if severe.",
-  "constipation": "Lactulose syrup 15ml at night.",
-  "abdominal pain": "Buscopan 10mg every 8 hours.",
-  "fatigue": "Multivitamin once daily.",
-  "dizziness": "Meclizine 25mg once daily.",
-  "allergy": "Loratadine 10mg once daily.",
-  "insomnia": "Melatonin 3mg before sleep.",
-  "anxiety": "Low-dose propranolol or consult a doctor.",
-  "heartburn": "Omeprazole 20mg before breakfast.",
-  "shortness of breath": "Seek immediate medical care!",
-  "chest pain": "⚠️ Emergency — go to hospital immediately!"
-};
+const symptoms = [
+  "Fever", "Cough", "Sore throat", "Headache", "Nausea", "Vomiting",
+  "Fatigue", "Muscle pain", "Shortness of breath", "Chest pain",
+  "Runny nose", "Diarrhea", "Abdominal pain", "Dizziness",
+  "Yellow sputum", "Chills", "Sneezing", "Loss of appetite"
+];
 
-const symptomButtonsContainer = document.getElementById("symptom-buttons");
-const outputDiv = document.getElementById("output");
-const analyzeBtn = document.getElementById("analyze-btn");
+const symptomList = document.getElementById("symptomList");
+const output = document.getElementById("output");
 let selectedSymptoms = [];
 
-// Create buttons dynamically
-Object.keys(symptomData).forEach(symptom => {
-  const btn = document.createElement("button");
-  btn.classList.add("symptom-btn");
-  btn.textContent = symptom;
-
-  btn.addEventListener("click", () => {
-    btn.classList.toggle("active");
-
-    if (btn.classList.contains("active")) {
-      selectedSymptoms.push(symptom);
-    } else {
-      selectedSymptoms = selectedSymptoms.filter(s => s !== symptom);
-    }
-
-    analyzeBtn.style.display = selectedSymptoms.length > 0 ? "block" : "none";
-  });
-
-  symptomButtonsContainer.appendChild(btn);
+// Generate clickable symptom tags
+symptoms.forEach(symptom => {
+  const div = document.createElement("div");
+  div.className = "symptom";
+  div.textContent = symptom;
+  div.onclick = () => toggleSymptom(symptom, div);
+  symptomList.appendChild(div);
 });
 
-// Analyze selected symptoms
+function toggleSymptom(symptom, element) {
+  if (selectedSymptoms.includes(symptom)) {
+    selectedSymptoms = selectedSymptoms.filter(s => s !== symptom);
+    element.classList.remove("selected");
+  } else {
+    selectedSymptoms.push(symptom);
+    element.classList.add("selected");
+  }
+}
+
+// Analyze symptoms
 function analyze() {
-  if (selectedSymptoms.length === 0) return;
+  if (selectedSymptoms.length === 0) {
+    output.innerHTML = `<p>Please select at least one symptom.</p>`;
+    return;
+  }
 
-  // Build lists
-  const symptomsList = selectedSymptoms.map(s => `<li>${s}</li>`).join("");
-  const medicinesList = selectedSymptoms.map(s => `<li>${symptomData[s]}</li>`).join("");
+  let results = [];
 
-  // Create one unified prescription card
-  outputDiv.innerHTML = `
+  if (selectedSymptoms.includes("Fever") && selectedSymptoms.includes("Cough")) {
+    results.push({
+      title: "Possible Cold or Flu",
+      medicine: "Paracetamol (500 mg) every 6 hours + Warm fluids + Rest"
+    });
+  }
+
+  if (selectedSymptoms.includes("Cough") && selectedSymptoms.includes("Yellow sputum")) {
+    results.push({
+      title: "Possible Bacterial Chest Infection",
+      medicine: "Amoxicillin 500 mg every 8 hours for 5 days (doctor consultation recommended)"
+    });
+  }
+
+  if (selectedSymptoms.includes("Headache")) {
+    results.push({
+      title: "General Headache",
+      medicine: "Ibuprofen 400 mg every 6 hours after food"
+    });
+  }
+
+  if (selectedSymptoms.includes("Nausea") || selectedSymptoms.includes("Vomiting")) {
+    results.push({
+      title: "Possible Gastric Upset",
+      medicine: "Ondansetron 4 mg every 8 hours if needed + Hydration"
+    });
+  }
+
+  if (results.length === 0) {
+    results.push({
+      title: "Mild or Non-Specific Symptoms",
+      medicine: "Rest, fluids, and simple pain relief if needed."
+    });
+  }
+
+  displayResults(results);
+}
+
+function displayResults(results) {
+  output.innerHTML = results.map(r => `
     <div class="result-card">
-      <h2>MKF Prescription Summary</h2>
-
-      <div class="result-section">
-        <h3>🩺 Selected Symptoms:</h3>
-        <ul>${symptomsList}</ul>
-      </div>
-
-      <div class="result-section">
-        <h3>💊 Recommended Medicines:</h3>
-        <ul>${medicinesList}</ul>
-      </div>
+      <h2>${r.title}</h2>
+      <p><strong>Recommended:</strong> ${r.medicine}</p>
     </div>
-  `;
-
-  // Scroll to output smoothly
-  outputDiv.scrollIntoView({ behavior: "smooth" });
+  `).join("");
 }

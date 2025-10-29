@@ -1,22 +1,30 @@
-.symptom-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MKF Prescriptions</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>MKF Prescriptions</h1>
+      <p class="muted">Select your symptoms below to get recommended medicines</p>
+    </header>
 
-.symptom {
-  background: #071017;
-  border: 1px solid var(--cyan);
-  color: var(--text);
-  border-radius: 20px;
-  padding: 8px 14px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: all 0.2s;
-}
+    <!-- Symptom Selection -->
+    <div class="card">
+      <div class="symptom-list" id="symptomList"></div>
+      <button onclick="analyze()">Analyze</button>
+    </div>
 
-.symptom.selected {
-  background: var(--cyan);
-  color: #000;
-  box-shadow: 0 0 12px var(--cyan);
-}
+    <!-- Results -->
+    <div id="output"></div>
+
+    <p class="disclaimer">⚠️ This tool is for guidance only. Consult a doctor for serious conditions.</p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -47,16 +47,29 @@ Object.keys(symptomData).forEach(symptom => {
 
 // Analyze selected symptoms
 function analyze() {
-  outputDiv.innerHTML = "";
+  if (selectedSymptoms.length === 0) return;
 
-  selectedSymptoms.forEach(symptom => {
-    const recommendation = symptomData[symptom];
-    const card = document.createElement("div");
-    card.classList.add("result-card");
-    card.innerHTML = `
-      <h2>${symptom}</h2>
-      <p><strong>Recommended Medicine:</strong> ${recommendation}</p>
-    `;
-    outputDiv.appendChild(card);
-  });
+  // Build lists
+  const symptomsList = selectedSymptoms.map(s => `<li>${s}</li>`).join("");
+  const medicinesList = selectedSymptoms.map(s => `<li>${symptomData[s]}</li>`).join("");
+
+  // Create one unified prescription card
+  outputDiv.innerHTML = `
+    <div class="result-card">
+      <h2>MKF Prescription Summary</h2>
+
+      <div class="result-section">
+        <h3>🩺 Selected Symptoms:</h3>
+        <ul>${symptomsList}</ul>
+      </div>
+
+      <div class="result-section">
+        <h3>💊 Recommended Medicines:</h3>
+        <ul>${medicinesList}</ul>
+      </div>
+    </div>
+  `;
+
+  // Scroll to output smoothly
+  outputDiv.scrollIntoView({ behavior: "smooth" });
 }

@@ -5,24 +5,104 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MKF Prescriptions</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .muted {
+      color: gray;
+    }
+    .symptom-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .symptom {
+      padding: 10px 15px;
+      background: #e9ecef;
+      border-radius: 20px;
+      cursor: pointer;
+      user-select: none;
+      transition: 0.2s;
+    }
+    .symptom.selected {
+      background: #007bff;
+      color: white;
+    }
+    .card {
+      text-align: center;
+      margin: 20px 0;
+    }
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #218838;
+    }
+    #output {
+      margin-top: 20px;
+    }
+    .result {
+      background: #f1f3f5;
+      border-radius: 10px;
+      padding: 15px;
+    }
+    .warning {
+      color: #c00;
+      font-weight: bold;
+    }
+    .disclaimer {
+      margin-top: 20px;
+      color: #666;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <header>
       <h1>MKF Prescriptions</h1>
-      <p class="muted">Select your symptoms below to get recommended medicines</p>
+      <p class="muted">Select your symptoms and get recommended medicine</p>
     </header>
 
-    <!-- Symptom Selection -->
+    <!-- Symptom selection -->
+    <div class="symptom-grid" id="symptomGrid">
+      <!-- Symptoms will be generated here -->
+    </div>
+
+    <!-- Analyze button -->
     <div class="card">
-      <div class="symptom-list" id="symptomList"></div>
-      <button id="analyzeBtn" onclick="analyze()">Analyze</button>
+      <button onclick="analyze()">Analyze</button>
     </div>
 
     <!-- Results -->
     <div id="output"></div>
 
-    <p class="disclaimer">⚠️ This tool is for guidance only. Consult a doctor for serious conditions.</p>
+    <p class="disclaimer">⚠️ This tool is for guidance only. Consult a doctor for any serious conditions.</p>
   </div>
 
   <script src="script.js"></script>

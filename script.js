@@ -36,7 +36,7 @@ function analyze() {
 
   for (let cond of conditions) {
     const matches = cond.keywords.filter(k => selected.includes(k.toLowerCase()));
-    if (matches.length === cond.keywords.length) {
+    if (matches.length === cond.keywords.length || matches.length >= 2) {
       result = `
         <div class="result">
           <h3>Diagnosis: ${cond.diagnosis || cond.condition}</h3>
@@ -53,3 +53,4 @@ function analyze() {
 
   document.getElementById("output").innerHTML = result;
 }
+

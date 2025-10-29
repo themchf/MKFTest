@@ -71,8 +71,8 @@ function analyze() {
           <h3>Diagnosis: ${cond.diagnosis || cond.condition}</h3>
           <p><strong>Medicine:</strong> ${cond.medicine}</p>
           <p><strong>Dosage:</strong> ${cond.dosage}</p>
-          ${cond.frequency ? `<p><strong>Frequency:</strong> ${cond.frequency}</p>` : ""}
-          ${cond.duration ? `<p><strong>Duration:</strong> ${cond.duration}</p>` : ""}
+          <p><strong>Frequency:</strong> ${cond.frequency}</p>
+          <p><strong>Duration:</strong> ${cond.duration}</p>
           <p class="warning">⚠️ ${cond.warning}</p>
         </div>
       `;
@@ -82,6 +82,7 @@ function analyze() {
 
   document.getElementById("output").innerHTML = result;
 }
+
 
 
 

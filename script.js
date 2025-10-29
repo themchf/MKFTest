@@ -1,7 +1,6 @@
 // --- Existing conditions array (keep as is) ---
 const conditions = [
   // --- Conditions database ---
-const conditions = [
   {
     keywords: ["fever", "cough", "yellow sputum"],
     diagnosis: "Bacterial Respiratory Infection",
@@ -83,5 +82,6 @@ function analyze() {
 
   document.getElementById("output").innerHTML = result;
 }
+
 
 

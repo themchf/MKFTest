@@ -1,109 +1,84 @@
-:root {
-  --bg:#070707;
-  --card:#0f1112;
-  --accent:#ff0066;
-  --cyan:#00ffd1;
-  --muted:#9aa2a6;
-  --text:#e6eef0;
+const symptoms = [
+  "Fever", "Cough", "Sore throat", "Headache", "Nausea", "Vomiting",
+  "Fatigue", "Muscle pain", "Shortness of breath", "Chest pain",
+  "Runny nose", "Diarrhea", "Abdominal pain", "Dizziness",
+  "Yellow sputum", "Chills", "Sneezing", "Loss of appetite"
+];
+
+const symptomList = document.getElementById("symptomList");
+const output = document.getElementById("output");
+let selectedSymptoms = [];
+
+// Generate clickable symptom tags
+symptoms.forEach(symptom => {
+  const div = document.createElement("div");
+  div.className = "symptom";
+  div.textContent = symptom;
+  div.onclick = () => toggleSymptom(symptom, div);
+  symptomList.appendChild(div);
+});
+
+function toggleSymptom(symptom, element) {
+  if (selectedSymptoms.includes(symptom)) {
+    selectedSymptoms = selectedSymptoms.filter(s => s !== symptom);
+    element.classList.remove("selected");
+  } else {
+    selectedSymptoms.push(symptom);
+    element.classList.add("selected");
+  }
 }
 
-*{box-sizing:border-box;}
-body {
-  margin:0;
-  font-family:Inter, system-ui, Roboto, Arial;
-  background:linear-gradient(#020202,var(--bg));
-  color:var(--text);
-}
-.container {
-  max-width:480px;
-  margin:24px auto;
-  padding:18px;
-}
-header h1 {
-  margin:0;
-  color:var(--accent);
-}
-.muted {
-  color:var(--muted);
-  margin-bottom:12px;
-}
-.card {
-  background:var(--card);
-  padding:16px;
-  border-radius:12px;
-  box-shadow:0 6px 30px rgba(0,0,0,0.6);
-  margin-top:12px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:14px;
+function analyze() {
+  if (selectedSymptoms.length === 0) {
+    output.innerHTML = `<p>Please select at least one symptom.</p>`;
+    return;
+  }
+
+  let results = [];
+
+  if (selectedSymptoms.includes("Fever") && selectedSymptoms.includes("Cough")) {
+    results.push({
+      title: "Possible Cold or Flu",
+      medicine: "Paracetamol (500 mg) every 6 hours + Warm fluids + Rest"
+    });
+  }
+
+  if (selectedSymptoms.includes("Cough") && selectedSymptoms.includes("Yellow sputum")) {
+    results.push({
+      title: "Possible Bacterial Chest Infection",
+      medicine: "Amoxicillin 500 mg every 8 hours for 5 days (doctor consultation recommended)"
+    });
+  }
+
+  if (selectedSymptoms.includes("Headache")) {
+    results.push({
+      title: "General Headache",
+      medicine: "Ibuprofen 400 mg every 6 hours after food"
+    });
+  }
+
+  if (selectedSymptoms.includes("Nausea") || selectedSymptoms.includes("Vomiting")) {
+    results.push({
+      title: "Possible Gastric Upset",
+      medicine: "Ondansetron 4 mg every 8 hours if needed + Hydration"
+    });
+  }
+
+  if (results.length === 0) {
+    results.push({
+      title: "Mild or Non-Specific Symptoms",
+      medicine: "Rest, fluids, and simple pain relief if needed."
+    });
+  }
+
+  displayResults(results);
 }
 
-/* Symptom tags */
-.symptom-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-}
-.symptom {
-  background: #071017;
-  border: 1px solid var(--cyan);
-  color: var(--text);
-  border-radius: 20px;
-  padding: 8px 14px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: all 0.2s;
-}
-.symptom:hover {
-  background: rgba(0,255,209,0.1);
-}
-.symptom.selected {
-  background: var(--cyan);
-  color: #000;
-  box-shadow: 0 0 12px var(--cyan);
-}
-
-/* Button */
-button {
-  background:linear-gradient(180deg,var(--accent),#ff2a8a);
-  color:white;
-  border:none;
-  padding:12px 20px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:700;
-  font-size:1rem;
-  transition:0.2s;
-}
-button:hover {
-  filter: brightness(1.2);
-}
-button:active{transform:translateY(1px);}
-
-/* Results */
-.result-card {
-  background:var(--card);
-  padding:12px;
-  border-radius:10px;
-  margin-top:12px;
-  box-shadow:0 4px 20px rgba(0,255,209,0.3);
-}
-.result-card h2 {
-  margin:0 0 6px 0;
-  color:var(--cyan);
-  font-size:1.05rem;
-}
-.result-card p {
-  margin:2px 0;
-  font-size:0.95rem;
-}
-
-.disclaimer {
-  margin-top:18px;
-  color:var(--muted);
-  font-size:13px;
-  text-align:center;
+function displayResults(results) {
+  output.innerHTML = results.map(r => `
+    <div class="result-card">
+      <h2>${r.title}</h2>
+      <p><strong>Recommended:</strong> ${r.medicine}</p>
+    </div>
+  `).join("");
 }

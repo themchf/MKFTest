@@ -1,128 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MKF Prescriptions</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    /* Symptom Button Layout */
-    #symptom-buttons {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 12px;
-      margin-top: 18px;
-    }
+.symptom-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 
-    .symptom-btn {
-      background: var(--card);
-      border: 1px solid rgba(0, 255, 209, 0.4);
-      border-radius: 12px;
-      color: var(--text);
-      padding: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      text-transform: capitalize;
-      box-shadow: 0 0 10px rgba(0,255,209,0.15);
-      transition: all 0.25s ease;
-    }
+.symptom {
+  background: #071017;
+  border: 1px solid var(--cyan);
+  color: var(--text);
+  border-radius: 20px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
 
-    .symptom-btn:hover {
-      background: rgba(0,255,209,0.1);
-      transform: translateY(-2px);
-      box-shadow: 0 0 15px rgba(0,255,209,0.3);
-    }
-
-    .symptom-btn.active {
-      background: linear-gradient(180deg, var(--accent), #ff2a8a);
-      border: none;
-      color: #fff;
-      box-shadow: 0 0 20px rgba(255,0,102,0.7);
-      transform: scale(1.05);
-    }
-
-    #analyze-btn {
-      display: none;
-      width: 100%;
-      margin-top: 18px;
-      background: linear-gradient(180deg, var(--cyan), #00bfa5);
-      color: #000;
-      font-weight: 700;
-      border: none;
-      border-radius: 10px;
-      padding: 14px;
-      cursor: pointer;
-      transition: 0.3s ease;
-      box-shadow: 0 0 15px rgba(0,255,209,0.3);
-    }
-
-    #analyze-btn:hover {
-      background: var(--cyan);
-      transform: translateY(-2px);
-      box-shadow: 0 0 25px rgba(0,255,209,0.5);
-    }
-
-    #output {
-      margin-top: 20px;
-    }
-
-    .result-card {
-      background: var(--card);
-      padding: 18px;
-      border-radius: 12px;
-      box-shadow: 0 0 18px rgba(0,255,209,0.25);
-      margin-top: 15px;
-      opacity: 0;
-      animation: fadeIn 0.5s ease forwards;
-    }
-
-    .result-card h2 {
-      color: var(--cyan);
-      margin: 0 0 10px 0;
-      font-size: 1.1rem;
-      text-align: center;
-    }
-
-    .result-section {
-      margin-top: 10px;
-    }
-
-    .result-section h3 {
-      color: var(--accent);
-      margin-bottom: 6px;
-      font-size: 1rem;
-    }
-
-    .result-section ul {
-      margin: 0;
-      padding-left: 20px;
-    }
-
-    .result-section li {
-      margin-bottom: 5px;
-      color: var(--text);
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(10px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>MKF Prescriptions</h1>
-      <p class="muted">Select your symptoms to get a full prescription recommendation</p>
-    </header>
-
-    <div id="symptom-buttons"></div>
-    <button id="analyze-btn" onclick="analyze()">Analyze</button>
-    <div id="output"></div>
-
-    <p class="disclaimer">⚠️ This tool is for guidance only. Consult a doctor for serious conditions.</p>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+.symptom.selected {
+  background: var(--cyan);
+  color: #000;
+  box-shadow: 0 0 12px var(--cyan);
+}

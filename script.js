@@ -32,7 +32,8 @@ const conditions = [
 
 // --- New symptom selection setup ---
 const allSymptoms = [
-  "تا", "کۆکە", "بەڵغەمی زەرد", "قوڕگ ئێش"، "پەڵەی سپی"، "سەرئێشە", "هەستیاری بەرامبەر ڕووناکی", "ڕەقی مل", "body aches",
+ "تا", "کۆکە", "بەڵغەمی زەرد", "sore throat", "white patches",
+  "headache", "sensitivity to light", "stiff neck", "body aches",
   "runny nose", "frequent urination", "excessive thirst", "weight loss",
   "chest pain", "shortness of breath", "sweating", "diarrhea", "vomiting",
   "itching", "rash", "abdominal pain", "joint pain", "fatigue", "nausea",

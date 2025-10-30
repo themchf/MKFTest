@@ -1,7 +1,21 @@
+:root {
+  --bg: #070707;
+  --card: #0f1112;
+  --accent: #00c957;
+  --muted: #9aa2a6;
+  --text: #e6eef0;
+  --symptom-bg: #11181c;
+  --symptom-hover: #1b2429;
+  --selected-bg: #00bfff;
+  --selected-text: #fff;
+  --result-bg: #13181c;
+}
+
 /* --- General page styling --- */
 body {
-  font-family: Arial, sans-serif;
-  background: #f8f9fa;
+  font-family: Inter, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
   margin: 0;
   padding: 0;
 }
@@ -11,9 +25,9 @@ body {
   max-width: 600px;
   margin: 40px auto;
   padding: 20px;
-  background: #fff;
+  background: var(--card);
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 20px rgba(0, 255, 209, 0.15);
 }
 
 /* --- Header --- */
@@ -21,8 +35,12 @@ header {
   text-align: center;
   margin-bottom: 20px;
 }
+header h1 {
+  color: var(--accent);
+  margin-bottom: 6px;
+}
 .muted {
-  color: gray;
+  color: var(--muted);
 }
 
 /* --- Symptom grid --- */
@@ -33,24 +51,23 @@ header {
   justify-content: center;
   margin-top: 10px;
 }
-
 .symptom {
   padding: 10px 15px;
-  background: #e9ecef;
+  background: var(--symptom-bg);
   border-radius: 20px;
   cursor: pointer;
   user-select: none;
   transition: background 0.2s, color 0.2s;
   font-size: 15px;
+  box-shadow: 0 0 8px rgba(0, 255, 209, 0.08);
 }
-
 .symptom:hover {
-  background: #dee2e6;
+  background: var(--symptom-hover);
 }
-
 .symptom.selected {
-  background: #007bff;
-  color: white;
+  background: var(--selected-bg);
+  color: var(--selected-text);
+  box-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
 }
 
 /* --- Analyze button --- */
@@ -58,48 +75,54 @@ header {
   text-align: center;
   margin: 20px 0;
 }
-
 button {
-  background: #28a745;
+  background: linear-gradient(180deg, var(--accent), #00ff95);
   color: white;
   border: none;
   border-radius: 8px;
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  transition: background 0.2s;
+  font-weight: bold;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 0 10px rgba(0, 255, 150, 0.4);
 }
-
 button:hover {
-  background: #218838;
+  box-shadow: 0 0 18px rgba(0, 255, 150, 0.6);
+}
+button:active {
+  transform: translateY(1px);
 }
 
 /* --- Output and results --- */
 #output {
   margin-top: 20px;
 }
-
 .result {
-  background: #f1f3f5;
+  background: var(--result-bg);
   border-radius: 10px;
   padding: 15px;
   margin-top: 10px;
+  box-shadow: 0 4px 20px rgba(0, 255, 209, 0.3);
 }
-
+.result h3 {
+  color: var(--accent);
+  margin-bottom: 8px;
+}
 .warning {
-  color: #c00;
+  color: #ff4d4d;
   font-weight: bold;
 }
 
 /* --- Disclaimer --- */
 .disclaimer {
   margin-top: 20px;
-  color: #666;
+  color: var(--muted);
   text-align: center;
   font-size: 14px;
 }
 
-/* --- Responsive design for mobile --- */
+/* --- Responsive design --- */
 @media (max-width: 480px) {
   .container {
     margin: 20px;

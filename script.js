@@ -2,7 +2,7 @@
 const conditions = [
   // --- Conditions database ---
   {
-    keywords: ["fever", "cough", "yellow sputum"],
+    keywords: ["تا", "کۆکە", "بەڵغەمی زەرد"],
     diagnosis: "Bacterial Respiratory Infection",
     medicine: "Amoxicillin",
     dosage: "500 mg",
@@ -32,7 +32,7 @@ const conditions = [
 
 // --- New symptom selection setup ---
 const allSymptoms = [
-  "fever", "cough", "yellow sputum", "sore throat", "white patches",
+  "تا", "کۆکە", "بەڵغەمی زەرد", "sore throat", "white patches",
   "headache", "sensitivity to light", "stiff neck", "body aches",
   "runny nose", "frequent urination", "excessive thirst", "weight loss",
   "chest pain", "shortness of breath", "sweating", "diarrhea", "vomiting",
@@ -82,6 +82,7 @@ function analyze() {
 
   document.getElementById("output").innerHTML = result;
 }
+
 
 
 

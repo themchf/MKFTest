@@ -32,14 +32,13 @@ const conditions = [
 
 // --- New symptom selection setup ---
 const allSymptoms = [
-"تۆشەی گەرمی گلوو", "پەلە سپی", "سەردرد", "هەست بە ڕووناکی", "گرێی خۆشک",
-"ئەزاری جەستە", "بێرهەوی دەمێن", "هێنانەوەی فراوانی خۆزگە", "تێژینی زیاتر", "کەمبوونی قەبارە", "ئەزاری سەنگ", "هەناسە کەم", "ئەرەق کرن",
-"دزڵ", "قی کردن", "تەباشتی", "ئیشکی خەریکی", "ئەزاری شێوەکەت",
-"ئەزاری کۆل-پوش", "خەستگی", "ئێش و خۆشک", 
-"دڵ شێواندن", "دەرەی پاش", "هەست بە سرما", "هێنان بە ئازار", "هێنان سوتان", "رەنگی خوێن لە تەخت",
-"خڕایی سەر", "زەردی چاو",
-"سوربوونی چاو", 
-"ئەرەقی شەو"
+"تا", "کۆکە", "بەڵغەمی زەرد", "sore throat", "white patches",
+  "headache", "sensitivity to light", "stiff neck", "body aches",
+  "runny nose", "frequent urination", "excessive thirst", "weight loss",
+  "chest pain", "shortness of breath", "sweating", "diarrhea", "vomiting",
+  "itching", "rash", "abdominal pain", "joint pain", "fatigue", "nausea",
+  "back pain", "sneezing", "cold", "painful urination", "burning urine",
+  "bloody stool", "itchy scalp", "yellow eyes", "red eyes", "night sweats"
 ];
 
 // Generate buttons dynamically
@@ -83,6 +82,7 @@ function analyze() {
 
   document.getElementById("output").innerHTML = result;
 }
+
 
 
 
